@@ -1,0 +1,51 @@
+{
+    "app": {
+        "version": "0.0.0"
+    },
+    "opts": {
+        "state_help": "State",
+        "version_help": "current version",
+        "output_file_help": "csv output file",
+        "output_file_default": "output.csv"
+    },
+    "web": {
+        "base_url": "https://www2.cne.gob.ve/",
+        "format_url": "customapi/candidato/{0}/{1}/{2}/{3}/{4}/{5}/{6}/",
+        "operation": "GET",
+        "cod_event_id": "0318",
+        "cod_cargo": "6",
+        "content_type": "Content-Type",
+        "headers": "application/json; charset=utf-8"
+
+
+    },
+    "log": {
+        "log_to_file": false,
+        "log_file": "logs/cne-collector-{0}.log",
+        "level": "DEBUG",
+        "format": "%(asctime)-15s %(threadName)-15s %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s"
+    },
+    "tm": {
+        "file": "data/TM2021.csv",
+        "encoding": "latin_1",
+        "columns" :{
+            "cod_estado": "COD_ESTADO",
+            "des_estado": "DES_ESTADO",
+            "cod_municipio": "COD_MUNICIPIO",
+            "des_municipio": "DES_MUNICIPIO",
+            "cod_parroquia": "COD_PARROQUIA",
+            "des_parroquia": "DES_PARROQUIA",
+            "codigo_centro": "CODIGO",
+            "nombre_centro": "NOMBRE",
+            "direccion_centro": "DIRECCION",
+            "mesa": "MESA",
+            "terminal_desde": "TERMINAL_DESDE",
+            "terminal_hasta": "TERMINAL_HASTA",
+            "votantes_evento": "VOTANTES_EVENTO"
+        },
+        "states": {
+            "min": 1,
+            "max": 24
+        }
+    }
+}
