@@ -6,6 +6,7 @@ import logging
 from optparse import OptionParser
 import os
 import csv
+import time
 import pandas as pd
 from lib.api_classes import CNEResults
 
@@ -83,29 +84,49 @@ logger.info("Total number of mesas: " + str(selected_tm.shape[0]))
 # Let's go across all centros and mesas
 # Open the output file
 #
+output_lines = []
+        
+# print headers
+line = config['output']['header']
+
+output_lines.append(line)
+
+for index, row in selected_tm.iterrows():
+    for i in range(3):
+        codigo_centro = int(row[config['tm']['columns']['codigo_centro']])
+        mesa = int(row[config['tm']['columns']['mesa']])
+        logger.info("Count: " + str(index + 1) + " - collecting data from centro "+ str(codigo_centro) + ", mesa: " + str(mesa)) 
+        try:
+            electoral_results.Request_results(web_config, codigo_centro, mesa)
+        except Exception as e:
+            logger.error("There is an error trying gather data from Server. Error: " + str(e) + ". Let's retry...")
+            logger.info("retry # " + str(i+1))
+            logger.info("Let's wait a while ....t = " + str(config['web']['delay_between_retries']))
+            time.sleep(config['web']['delay_between_retries'])
+            continue
+        #
+        # Got the results. 
+        # Build the table
+        #
+        for res in electoral_results.results:
+            for party in res.parties:
+                line = [electoral_results.est, electoral_results.mun, electoral_results.par, electoral_results.cod, electoral_results.mes, res.name, res.total_votes, party.name, party.votes]
+                output_lines.append(line)
+        break # break the reries
+        #time.sleep(config['web']['delay_between_queries'])
+    if (i > 2):
+        logger.error("Tried too many times. Program ABORTED")
+        exit()
+
+logger.info ("Collection Completed. Total of " + str(len(output_lines)) + " were collected.") 
+
 try:
     with open(output_file, 'w', newline='') as file:
         writer = csv.writer(file)
-        for index, row in selected_tm.iterrows():
-            codigo_centro = int(row[config['tm']['columns']['codigo_centro']])
-            mesa = int(row[config['tm']['columns']['mesa']])
-            logger.debug("Count: " + str(index + 1) + " - collecting data from centro "+ str(codigo_centro) + ", mesa: " + str(mesa)) 
-            try:
-                electoral_results.Request_results(web_config, codigo_centro, mesa)
-            except Exception as e:
-                logger.error("There is an error trying gather data from Server. Error: " + str(e) + ". Program ABORTED.")
-                exit()
-            #
-            # Got the results. 
-            # Build the table
-            #
-            for res in electoral_results.results:
-                for party in res.parties:
-                    line = [electoral_results.est, electoral_results.mun, electoral_results.par, electoral_results.cod, electoral_results.mes, res.name, res.total_votes, party.name, party.votes]
-                    writer.writerow(line)
-
+        for line in output_lines:
+            writer.writerow(line)
 except Exception as e:
     logger.error("Error trying to open output file. Try again. Error: " + str(e) + ". Program ABORTED.")
     exit()
+logger.info("PROGRAM ENDED.")
 
-a = 1

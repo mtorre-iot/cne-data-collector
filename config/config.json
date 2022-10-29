@@ -6,7 +6,7 @@
         "state_help": "State",
         "version_help": "current version",
         "output_file_help": "csv output file",
-        "output_file_default": "output.csv"
+        "output_file_default": "data/output.csv"
     },
     "web": {
         "base_url": "https://www2.cne.gob.ve/",
@@ -15,14 +15,14 @@
         "cod_event_id": "0318",
         "cod_cargo": "6",
         "content_type": "Content-Type",
-        "headers": "application/json; charset=utf-8"
-
-
+        "headers": "application/json; charset=utf-8",
+        "delay_between_queries": 1,
+        "delay_between_retries": 1
     },
     "log": {
         "log_to_file": false,
         "log_file": "logs/cne-collector-{0}.log",
-        "level": "DEBUG",
+        "level": "INFO",
         "format": "%(asctime)-15s %(threadName)-15s %(levelname)-8s %(module)-15s:%(lineno)-8s %(message)s"
     },
     "tm": {
@@ -47,5 +47,8 @@
             "min": 1,
             "max": 24
         }
+    },
+    "output": {
+        "header": ["COD_ESTADO", "COD_MUNICIPIO", "COD_PARROQUIA", "COD_CENTRO", "MESA", "CANDIDATO", "TOTAL VOTOS EN MESA", "PARTIDO", "VOTOS POR PARTIDO"]
     }
 }
