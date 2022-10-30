@@ -16,8 +16,9 @@
         "cod_cargo": "6",
         "content_type": "Content-Type",
         "headers": "application/json; charset=utf-8",
+        "retries": 3,
         "delay_between_queries": 1,
-        "delay_between_retries": 1
+        "delay_between_retries": 2
     },
     "log": {
         "log_to_file": false,

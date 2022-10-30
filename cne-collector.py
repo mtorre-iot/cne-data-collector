@@ -92,7 +92,7 @@ line = config['output']['header']
 output_lines.append(line)
 
 for index, row in selected_tm.iterrows():
-    for i in range(3):
+    for i in range(config['web']['retries']):
         codigo_centro = int(row[config['tm']['columns']['codigo_centro']])
         mesa = int(row[config['tm']['columns']['mesa']])
         logger.info("Count: " + str(index + 1) + " - collecting data from centro "+ str(codigo_centro) + ", mesa: " + str(mesa)) 
